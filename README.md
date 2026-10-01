@@ -20,14 +20,11 @@ npm run build
 | Per-page metadata helper | `src/lib/metadata.ts` |
 | Design tokens, motion, legal prose styles | `src/app/globals.css` |
 | Shared UI (buttons, section headers, CTA, capability grid) | `src/components/ui.tsx` |
-| `/follow` redirect | `src/app/follow/route.ts` |
+| `/follow` redirect (static page) | `src/app/follow/page.tsx` |
 
-## Before launch
+## Launch settings
 
-Search for `TODO(launch)` in `src/config/site.ts`:
-
-- `site.contact.email`: real business inbox (currently `contact@example.com`).
-- `site.social.instagram`: full Instagram profile URL. Until set, `/follow` redirects to `/`.
+Contact email and Instagram URL are set in `src/config/site.ts`. `/follow` redirects to `site.social.instagram`, or to `/` if that is `null`.
 
 Set `NEXT_PUBLIC_SITE_URL` (for example `https://yourdomain.com`) in the hosting environment once the custom domain is connected. See `.env.example`.
 

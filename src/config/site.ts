@@ -3,8 +3,6 @@
  *
  * Everything that identifies the company (name, contact details, social
  * destinations, navigation) lives here so it can be changed in one place.
- *
- * Before production, replace every value marked `TODO(launch)`.
  */
 
 /**
@@ -25,16 +23,12 @@ export const site = {
     "Pacific Horizon Labs LLC builds software, automation, and interactive experiences that operate in the real world, including the Pacific Horizon AI Photo Booth and Pacific Rising Ops.",
 
   contact: {
-    // TODO(launch): replace with the real business inbox (e.g. hello@yourdomain.com).
-    // `example.com` is a reserved domain, so this placeholder can never reach a real person.
-    email: "contact@example.com",
+    email: "hector@pacifichorizonlabs.com",
   },
 
   social: {
-    // TODO(launch): replace with the full Instagram profile URL,
-    // e.g. "https://www.instagram.com/<your-handle>/".
-    // While this is null, /follow redirects to the homepage instead.
-    instagram: null as string | null,
+    // Destination of the /follow short link. Set to null to send /follow to the homepage instead.
+    instagram: "https://www.instagram.com/pacifichorizonlabs/" as string | null,
   },
 
   // Shown at the top of Privacy, Terms, and SMS pages. Update whenever those pages change.
