@@ -10,3 +10,7 @@
 
 [build.environment]
   NETLIFY_NEXT_PLUGIN_SKIP = "true"
+
+# Serverless functions (only /api/availability today). The site itself stays static.
+[functions]
+  directory = "netlify/functions"

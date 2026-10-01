@@ -173,9 +173,12 @@ export default function HomePage() {
                 </li>
               ))}
             </ul>
-            <div className="mt-10">
+            <div className="mt-10 flex flex-wrap gap-3">
               <ButtonLink href={photoBooth.href} variant="secondary">
                 See the photo booth
+              </ButtonLink>
+              <ButtonLink href="/book" variant="secondary">
+                Book an event
               </ButtonLink>
             </div>
           </div>

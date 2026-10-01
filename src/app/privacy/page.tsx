@@ -49,6 +49,13 @@ const sections: LegalSection[] = [
             attendance, branding materials, and billing information needed to provide a service.
           </li>
           <li>
+            <strong>Booking requests</strong> you submit on our website, including your contact
+            information, event type, preferred date and time, venue, city, estimated guest count,
+            and notes. Requests are received and stored through our website hosting provider&apos;s
+            form service. To show open times, the booking page checks our own calendar for the date
+            you select; it does not collect information about your calendar.
+          </li>
+          <li>
             <strong>Mobile phone number and messaging consent</strong>, if you choose to receive
             text messages from us. See{" "}
             <a href="#text-messaging">Text messaging and mobile information</a> below.

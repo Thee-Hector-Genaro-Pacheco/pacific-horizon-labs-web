@@ -65,13 +65,22 @@ export function SiteHeader() {
                 </Link>
               </li>
             ))}
-            <li className="ml-3">
+            <li>
               <Link
                 href="/contact"
                 aria-current={isActive("/contact") ? "page" : undefined}
-                className="inline-flex h-9 items-center rounded-full border border-line-strong px-4 text-sm text-paper transition-colors hover:border-paper/40 hover:bg-paper/5"
+                className="rounded-full px-3.5 py-2 text-sm text-paper-dim transition-colors hover:text-paper aria-[current=page]:text-paper"
               >
                 Contact
+              </Link>
+            </li>
+            <li className="ml-3">
+              <Link
+                href="/book"
+                aria-current={isActive("/book") ? "page" : undefined}
+                className="inline-flex h-9 items-center rounded-full border border-line-strong px-4 text-sm text-paper transition-colors hover:border-paper/40 hover:bg-paper/5 aria-[current=page]:border-signal/60"
+              >
+                Book event
               </Link>
             </li>
           </ul>
@@ -107,7 +116,7 @@ export function SiteHeader() {
       >
         <nav aria-label="Mobile" className="container-site py-8">
           <ul className="flex flex-col">
-            {[...primaryNav, { label: "Contact", href: "/contact" }].map((item, i) => (
+            {[...primaryNav, { label: "Contact", href: "/contact" }, { label: "Book event", href: "/book" }].map((item, i) => (
               <li key={item.href} className="border-b border-line">
                 <Link
                   href={item.href}

@@ -50,6 +50,7 @@ export const footerNav: { heading: string; items: NavItem[] }[] = [
     heading: "Systems",
     items: [
       { label: "AI Photo Booth", href: "/photobooth" },
+      { label: "Book an event", href: "/book" },
       { label: "Rising Ops", href: "/rising-ops" },
     ],
   },
@@ -99,6 +100,7 @@ export const inquiryTypes = [
 export const publicRoutes = [
   "/",
   "/photobooth",
+  "/book",
   "/rising-ops",
   "/about",
   "/contact",

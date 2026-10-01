@@ -142,8 +142,9 @@ export default function PhotoBoothPage() {
 
       <CtaBand
         title="Planning an event?"
-        body="Tell us the date, the venue, and the kind of experience you have in mind. We'll let you know what the booth can do for it."
-        primary={{ href: "/contact", label: "Inquire about booking" }}
+        body="Pick a date, see which time windows are open, and tell us about the venue and the experience you have in mind."
+        primary={{ href: "/book", label: "Check dates and request" }}
+        secondary={{ href: "/contact", label: "Ask a question" }}
       />
     </>
   );
@@ -167,7 +168,10 @@ function PageHeroWithVisual() {
         <div className="mt-8 grid gap-8 md:grid-cols-12 md:items-end">
           <p className="lede anim-rise md:col-span-7">{photoBooth.summary}</p>
           <div className="anim-rise flex flex-wrap gap-3 md:col-span-5 md:justify-end">
-            <ButtonLink href="/contact">Inquire about booking</ButtonLink>
+            <ButtonLink href="/book">Book an event</ButtonLink>
+            <ButtonLink href="/contact" variant="secondary">
+              Ask a question
+            </ButtonLink>
           </div>
         </div>
         <div className="anim-rise mx-auto mt-16 max-w-5xl md:mt-24">
