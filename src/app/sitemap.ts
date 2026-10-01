@@ -1,6 +1,8 @@
 import type { MetadataRoute } from "next";
 import { publicRoutes, site } from "@/config/site";
 
+export const dynamic = "force-static";
+
 export default function sitemap(): MetadataRoute.Sitemap {
   return publicRoutes.map((path) => ({
     url: `${site.url}${path === "/" ? "" : path}`,

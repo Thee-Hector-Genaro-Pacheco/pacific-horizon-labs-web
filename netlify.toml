@@ -1,0 +1,12 @@
+[build]
+  command = "npm run build"
+  publish = "out"
+
+# The Open Graph image is exported without a file extension, so declare its type.
+[[headers]]
+  for = "/opengraph-image"
+  [headers.values]
+    Content-Type = "image/png"
+
+[build.environment]
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
