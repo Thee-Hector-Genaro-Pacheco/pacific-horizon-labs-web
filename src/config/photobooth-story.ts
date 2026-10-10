@@ -51,7 +51,7 @@ export type PhotoboothStoryMedia = {
 export const photoboothStoryMedia: PhotoboothStoryMedia = {
   // TO INSERT REAL / SYNTHETIC EVENT IMAGE: uncomment and provide local path below:
   // e.g. baseEventImageSrc: "/images/photobooth/sample-event-capture.webp",
-  baseEventImageSrc: "/images/photobooth/corporate_event.png",
+  baseEventImageSrc: "/images/photobooth/synthetic-guests-master.png",
   alt: "Event guests enjoying the Pacific Horizon photo booth experience",
 };
 
