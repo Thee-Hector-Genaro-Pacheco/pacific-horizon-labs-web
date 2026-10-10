@@ -26,7 +26,10 @@ export function PhotoboothStory() {
           if (!current) return null;
 
           return (
-            <div className="space-y-3 sm:space-y-5 md:space-y-6">
+            <div
+              key={current.id}
+              className="space-y-3 sm:space-y-5 md:space-y-6 anim-chapter-reveal"
+            >
               {/* Chapter eyebrow and step index */}
               <div className="flex items-center gap-2">
                 <span className="size-2 rounded-full bg-signal" />

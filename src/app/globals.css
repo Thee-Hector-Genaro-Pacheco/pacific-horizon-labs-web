@@ -233,6 +233,113 @@ body {
   }
 }
 
+@keyframes chapter-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes reticle-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  50% {
+    transform: scale(1.03);
+    opacity: 1;
+  }
+}
+
+@keyframes halo-orbit {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes gate-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 25px rgba(242, 166, 90, 0.15), inset 0 0 15px rgba(242, 166, 90, 0.05);
+    border-color: rgba(242, 166, 90, 0.45);
+  }
+  50% {
+    box-shadow: 0 0 45px rgba(242, 166, 90, 0.35), inset 0 0 25px rgba(242, 166, 90, 0.15);
+    border-color: rgba(242, 166, 90, 0.85);
+  }
+}
+
+@keyframes connector-flow {
+  0% {
+    background-position: 0 0;
+  }
+  100% {
+    background-position: 48px 0;
+  }
+}
+
+@keyframes waveform-bar {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes print-sheen {
+  0% {
+    transform: translateX(-150%) skewX(-20deg);
+  }
+  40%,
+  100% {
+    transform: translateX(250%) skewX(-20deg);
+  }
+}
+
+@keyframes hud-crosshair {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.85;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes radar-ring {
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+
+@keyframes cursor-pulse {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .anim-rise {
     animation: rise 900ms var(--ease-out-quint) both;
@@ -249,6 +356,49 @@ body {
   }
   .anim-blink {
     animation: blink 1.4s steps(1) infinite;
+  }
+  .anim-chapter-reveal {
+    animation: chapter-reveal 400ms var(--ease-out-quint) both;
+  }
+  .anim-reticle {
+    animation: reticle-pulse 3s ease-in-out infinite;
+    transform-origin: center;
+  }
+  .anim-halo-orbit {
+    animation: halo-orbit 20s linear infinite;
+    transform-origin: center;
+  }
+  .anim-gate-glow {
+    animation: gate-glow 3.5s ease-in-out infinite;
+  }
+  .anim-connector-flow {
+    animation: connector-flow 2s linear infinite;
+  }
+  .anim-waveform-1 {
+    animation: waveform-bar 1.1s ease-in-out infinite;
+    transform-origin: bottom;
+  }
+  .anim-waveform-2 {
+    animation: waveform-bar 0.85s ease-in-out 0.2s infinite;
+    transform-origin: bottom;
+  }
+  .anim-waveform-3 {
+    animation: waveform-bar 1.35s ease-in-out 0.4s infinite;
+    transform-origin: bottom;
+  }
+  .anim-sheen {
+    animation: print-sheen 6s ease-in-out infinite;
+  }
+  .anim-crosshair {
+    animation: hud-crosshair 4s ease-in-out infinite;
+    transform-origin: center;
+  }
+  .anim-radar-ring {
+    animation: radar-ring 2.5s ease-out infinite;
+    transform-origin: center;
+  }
+  .anim-cursor {
+    animation: cursor-pulse 1s steps(1) infinite;
   }
 
   /* Scroll-linked reveal where supported; content is fully visible elsewhere. */

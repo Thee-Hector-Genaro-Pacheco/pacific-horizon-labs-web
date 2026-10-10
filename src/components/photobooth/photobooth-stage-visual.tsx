@@ -57,6 +57,23 @@ export function PhotoboothStageVisual({
 
   const hasEventImage = Boolean(photoboothStoryMedia.baseEventImageSrc);
 
+  // Dynamic slow pan/zoom & subtle parallax transform across scroll story
+  const dynamicTransform = isReducedMotion
+    ? step >= 2
+      ? "scale(0.97)"
+      : "scale(1)"
+    : step === 0
+    ? `scale(${1.02 + chapterProgress * 0.035}) translateY(${chapterProgress * -6}px)`
+    : step === 1
+    ? `scale(${1.05 + chapterProgress * 0.025}) translateX(${chapterProgress * 5}px)`
+    : step === 2
+    ? "scale(0.97) translateY(-4px)"
+    : step === 3
+    ? "scale(0.985)"
+    : step >= 4
+    ? "scale(0.96) translateY(4px)"
+    : "scale(1)";
+
   return (
     <div className="relative w-full max-w-md sm:max-w-lg md:max-w-2xl select-none">
       {/* Device Enclosure: Industrial iPad chassis with fine rim lighting */}
@@ -79,7 +96,7 @@ export function PhotoboothStageVisual({
                 unoptimized
                 className={`size-full object-cover ${transitionClass}`}
                 style={{
-                  transform: step >= 2 ? "scale(0.97)" : "scale(1)",
+                  transform: dynamicTransform,
                   filter: step >= 3 ? "brightness(0.9) contrast(1.08)" : "none",
                 }}
               />
@@ -92,7 +109,7 @@ export function PhotoboothStageVisual({
               viewBox="0 0 800 600"
               className={`absolute inset-0 size-full ${transitionClass}`}
               style={{
-                transform: step >= 2 ? "scale(0.97)" : "scale(1)",
+                transform: dynamicTransform,
                 filter: step >= 3 ? "brightness(0.9) contrast(1.08)" : "none",
               }}
               aria-hidden="true"
@@ -211,9 +228,10 @@ export function PhotoboothStageVisual({
             aria-hidden="true"
           >
             {/* Center Focal Crosshairs */}
-            <g stroke="#f2a65a" strokeOpacity="0.3" strokeWidth="1">
-              <line x1="390" y1="300" x2="410" y2="300" />
-              <line x1="400" y1="290" x2="400" y2="310" />
+            <g stroke="#f2a65a" strokeOpacity="0.4" strokeWidth="1" className={isReducedMotion ? "" : "anim-crosshair"}>
+              <line x1="388" y1="300" x2="412" y2="300" />
+              <line x1="400" y1="288" x2="400" y2="312" />
+              <circle cx="400" cy="300" r="10" fill="none" stroke="#f2a65a" strokeOpacity="0.2" />
             </g>
 
             {/* CHAPTER 01 & 02: Face Detection HUD Reticles */}
@@ -224,13 +242,21 @@ export function PhotoboothStageVisual({
               {hasEventImage && photoboothStoryMedia.baseEventImageSrc ? (
                 <>
                   {/* Face 01 (Left Guest) */}
-                  <g>
+                  <g className={isReducedMotion ? "" : "anim-reticle"}>
                     <path
                       d="M 216 192 V 176 H 232 M 308 176 H 324 V 192 M 324 274 V 290 H 308 M 232 290 H 216 V 274"
                       fill="none"
                       stroke="#f2a65a"
                       strokeWidth="1.5"
                     />
+                    {/* Corner Lock-On Dots */}
+                    <circle cx="216" cy="176" r="2" fill="#f2a65a" />
+                    <circle cx="324" cy="176" r="2" fill="#f2a65a" />
+                    <circle cx="324" cy="290" r="2" fill="#f2a65a" />
+                    <circle cx="216" cy="290" r="2" fill="#f2a65a" />
+                    {/* Internal Focal Target */}
+                    <line x1="266" y1="233" x2="274" y2="233" stroke="#f2a65a" strokeOpacity="0.35" strokeWidth="1" />
+                    <line x1="270" y1="229" x2="270" y2="237" stroke="#f2a65a" strokeOpacity="0.35" strokeWidth="1" />
                     <text
                       x="216"
                       y="168"
@@ -244,13 +270,21 @@ export function PhotoboothStageVisual({
                   </g>
 
                   {/* Face 02 (Center Guest) */}
-                  <g>
+                  <g className={isReducedMotion ? "" : "anim-reticle"}>
                     <path
                       d="M 338 134 V 118 H 354 M 432 118 H 448 V 134 M 448 218 V 234 H 432 M 354 234 H 338 V 218"
                       fill="none"
                       stroke="#f2a65a"
                       strokeWidth="1.5"
                     />
+                    {/* Corner Lock-On Dots */}
+                    <circle cx="338" cy="118" r="2" fill="#f2a65a" />
+                    <circle cx="448" cy="118" r="2" fill="#f2a65a" />
+                    <circle cx="448" cy="234" r="2" fill="#f2a65a" />
+                    <circle cx="338" cy="234" r="2" fill="#f2a65a" />
+                    {/* Internal Focal Target */}
+                    <line x1="389" y1="176" x2="397" y2="176" stroke="#f2a65a" strokeOpacity="0.35" strokeWidth="1" />
+                    <line x1="393" y1="172" x2="393" y2="180" stroke="#f2a65a" strokeOpacity="0.35" strokeWidth="1" />
                     <text
                       x="338"
                       y="110"
@@ -264,13 +298,21 @@ export function PhotoboothStageVisual({
                   </g>
 
                   {/* Face 03 (Right Guest) */}
-                  <g>
+                  <g className={isReducedMotion ? "" : "anim-reticle"}>
                     <path
                       d="M 502 158 V 142 H 518 M 590 142 H 606 V 158 M 606 236 V 252 H 590 M 518 252 H 502 V 236"
                       fill="none"
                       stroke="#f2a65a"
                       strokeWidth="1.5"
                     />
+                    {/* Corner Lock-On Dots */}
+                    <circle cx="502" cy="142" r="2" fill="#f2a65a" />
+                    <circle cx="606" cy="142" r="2" fill="#f2a65a" />
+                    <circle cx="606" cy="252" r="2" fill="#f2a65a" />
+                    <circle cx="502" cy="252" r="2" fill="#f2a65a" />
+                    {/* Internal Focal Target */}
+                    <line x1="550" y1="197" x2="558" y2="197" stroke="#f2a65a" strokeOpacity="0.35" strokeWidth="1" />
+                    <line x1="554" y1="193" x2="554" y2="201" stroke="#f2a65a" strokeOpacity="0.35" strokeWidth="1" />
                     <text
                       x="502"
                       y="134"
@@ -286,7 +328,7 @@ export function PhotoboothStageVisual({
               ) : (
                 <>
                   {/* Fallback Subject 01 Caliper */}
-                  <g transform="translate(244 392)">
+                  <g transform="translate(244 392)" className={isReducedMotion ? "" : "anim-reticle"}>
                     <path
                       d="M0 20V0H20 M72 0H92V20 M92 76V96H72 M20 96H0V76"
                       fill="none"
@@ -306,7 +348,7 @@ export function PhotoboothStageVisual({
                   </g>
 
                   {/* Fallback Subject 02 Caliper */}
-                  <g transform="translate(474 392)">
+                  <g transform="translate(474 392)" className={isReducedMotion ? "" : "anim-reticle"}>
                     <path
                       d="M0 20V0H20 M72 0H92V20 M92 76V96H72 M20 96H0V76"
                       fill="none"
@@ -345,22 +387,28 @@ export function PhotoboothStageVisual({
                   {/* Celestial AR Halo Above Guests */}
                   <g stroke="#f2a65a" strokeWidth="1" fill="none" opacity="0.85">
                     {/* Face 01 Halo */}
-                    <ellipse cx="270" cy="158" rx="28" ry="8" strokeOpacity="0.65" />
-                    <circle cx="270" cy="150" r="2" fill="#f2a65a" />
-                    <circle cx="248" cy="155" r="1.5" fill="#f2a65a" />
-                    <circle cx="292" cy="155" r="1.5" fill="#f2a65a" />
+                    <g className={isReducedMotion ? "" : "anim-reticle"}>
+                      <ellipse cx="270" cy="158" rx="28" ry="8" strokeOpacity="0.65" strokeDasharray="4 2" />
+                      <circle cx="270" cy="150" r="2" fill="#f2a65a" />
+                      <circle cx="248" cy="155" r="1.5" fill="#f2a65a" />
+                      <circle cx="292" cy="155" r="1.5" fill="#f2a65a" />
+                    </g>
 
                     {/* Face 02 Halo */}
-                    <ellipse cx="393" cy="100" rx="32" ry="9" strokeOpacity="0.65" />
-                    <circle cx="393" cy="91" r="2" fill="#f2a65a" />
-                    <circle cx="368" cy="97" r="1.5" fill="#f2a65a" />
-                    <circle cx="418" cy="97" r="1.5" fill="#f2a65a" />
+                    <g className={isReducedMotion ? "" : "anim-reticle"}>
+                      <ellipse cx="393" cy="100" rx="32" ry="9" strokeOpacity="0.65" strokeDasharray="5 2.5" />
+                      <circle cx="393" cy="91" r="2" fill="#f2a65a" />
+                      <circle cx="368" cy="97" r="1.5" fill="#f2a65a" />
+                      <circle cx="418" cy="97" r="1.5" fill="#f2a65a" />
+                    </g>
 
                     {/* Face 03 Halo */}
-                    <ellipse cx="554" cy="124" rx="30" ry="8" strokeOpacity="0.65" />
-                    <circle cx="554" cy="116" r="2" fill="#f2a65a" />
-                    <circle cx="530" cy="121" r="1.5" fill="#f2a65a" />
-                    <circle cx="578" cy="121" r="1.5" fill="#f2a65a" />
+                    <g className={isReducedMotion ? "" : "anim-reticle"}>
+                      <ellipse cx="554" cy="124" rx="30" ry="8" strokeOpacity="0.65" strokeDasharray="4 2" />
+                      <circle cx="554" cy="116" r="2" fill="#f2a65a" />
+                      <circle cx="530" cy="121" r="1.5" fill="#f2a65a" />
+                      <circle cx="578" cy="121" r="1.5" fill="#f2a65a" />
+                    </g>
                   </g>
 
                   {/* Face 01 Landmark Dots & Minimal Mesh */}
@@ -494,12 +542,12 @@ export function PhotoboothStageVisual({
               opacity: step >= 2 && step <= 4 ? 1 : 0,
               transform:
                 step === 2
-                  ? "translateY(-6px) scale(0.97)"
+                  ? "translateY(-6px) scale(0.975) perspective(900px) rotateX(2deg)"
                   : step === 3
-                  ? "translateY(0) scale(1)"
+                  ? "translateY(0) scale(1) perspective(900px) rotateX(0deg)"
                   : "translateY(8px) scale(0.94)",
               boxShadow:
-                step >= 2 ? "0 20px 50px rgba(0,0,0,0.8), 0 0 0 1px rgba(242,166,90,0.2)" : "none",
+                step >= 2 ? "0 24px 60px rgba(0,0,0,0.85), 0 0 0 1px rgba(242,166,90,0.25)" : "none",
             }}
           >
             {/* Captured Still Indicator Badge */}
@@ -615,6 +663,10 @@ export function PhotoboothStageVisual({
                         </svg>
                       </>
                     )}
+                    {/* Dynamic sheen on smartphone glass */}
+                    <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[0.55rem] z-25">
+                      <div className={`size-full bg-gradient-to-r from-transparent via-white/15 to-transparent ${isReducedMotion ? "" : "anim-sheen"}`} />
+                    </div>
                     {/* Mini Phone Dynamic Island / Dot */}
                     <div className="relative z-20 flex justify-center">
                       <span className="size-0.5 sm:size-1 rounded-full bg-paper/50" />
@@ -664,13 +716,15 @@ export function PhotoboothStageVisual({
               pointerEvents: step === 5 ? "auto" : "none",
               transform:
                 step === 5
-                  ? "scale(1) rotate(-1.5deg)"
-                  : "scale(0.88) rotate(0deg)",
+                  ? "scale(1) rotate(-1.5deg) translateY(-2px)"
+                  : "scale(0.88) rotate(0deg) translateY(12px)",
             }}
           >
-            <div className="relative aspect-[3/2] w-64 sm:w-80 md:w-88 rounded-lg bg-[#faf8f5] p-2.5 sm:p-3 shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_0_1px_rgba(255,255,255,0.25)] text-ink">
+            <div className="relative aspect-[3/2] w-64 sm:w-80 md:w-88 rounded-lg bg-[#faf8f5] p-2.5 sm:p-3 shadow-[0_25px_60px_rgba(0,0,0,0.95),0_0_0_1px_rgba(255,255,255,0.25)] text-ink overflow-hidden">
               {/* Gloss sheen line across print */}
-              <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/25 to-transparent pointer-events-none rounded-lg z-20" />
+              <div className="absolute inset-0 pointer-events-none rounded-lg z-20 overflow-hidden">
+                <div className={`size-full bg-gradient-to-r from-transparent via-white/30 to-transparent ${isReducedMotion ? "" : "anim-sheen"}`} />
+              </div>
 
               <div className="size-full border border-black/10 p-2 flex flex-col justify-between">
                 {/* Embedded Rich Guest Photo Artwork */}
