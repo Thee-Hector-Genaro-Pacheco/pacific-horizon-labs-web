@@ -22,7 +22,15 @@
 
 # misc
 .DS_Store
+
+# keys and credentials
 *.pem
+*.key
+*.p8
+*.p12
+*.mobileprovision
+*service-account*.json
+certs/
 
 # debug
 npm-debug.log*
