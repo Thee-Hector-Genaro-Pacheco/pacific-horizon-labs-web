@@ -58,6 +58,8 @@ All swappable media and copy for `/photobooth` lives in **`src/config/photobooth
 | Beat timing | `boothSequence.beats[].range` | fraction of the scroll track, 0–1 |
 | Captured photo shown next to the QR code | `boothSequence.resultPhoto` | 4:3 WebP |
 | Reduced-motion stills | `beats[].still` | 4:3 WebP |
+| Mode screen recordings (Classic, AR Party, Loop) | `modeCards[].media` | WebM + MP4 + WebP poster, 720 px wide, under 2 MB each; a card without media is hidden |
+| Event frame examples | `eventFrames` | up to 3 photos of real frame overlays, with alt text describing the frame |
 | Gallery | `gallerySets[].photos[].src` | WebP, set `width`/`height` to match; 1–2 photos per set show two-up, 3+ show in three columns |
 | Theme backgrounds | `themeOptions[].src` | 3:4 WebP |
 | Pricing, FAQ, schema | `packages`, `faqs`, `localBusiness` | text; `null` schema fields are omitted |
@@ -65,6 +67,7 @@ All swappable media and copy for `/photobooth` lives in **`src/config/photobooth
 Flags in the same file:
 
 - `photoboothFeatures.themePicker` (default `false`): shows the "Tonight's theme" section. It's off because the app doesn't generate AI backgrounds yet; its copy and concept art need updating before you turn it on.
+- `photoboothFeatures.modes` (default `false`): shows the "Modes" section after the scroll sequence. Even when on, it renders nothing until at least one mode card has media.
 - `boothSequence.faceBrackets` (default `false`): draws a bracket on each face in `faces` instead of the app's fixed viewfinder corners. Turn it on only once the app shows per-face brackets.
 - `boothSequence.illustrative` (default `true`): shows the "Illustrative image" label on the iPad screen. Set it to `false` when the media is real event footage.
 - `gallerySets[].photos[].illustrative`: labels each gallery photo "Illustrative". Set it to `false` for real event photos; the gallery's heading label disappears once no photo is illustrative.
@@ -123,3 +126,33 @@ ffmpeg -i IMG_0001.jpg \
 ```
 
 Theme backgrounds use 3:4: `crop='min(iw,ih*3/4)':'min(ih,iw*4/3)',scale=600:800`.
+
+### Mode recordings (ffmpeg)
+
+Record each mode on the iPad (connect it to a Mac, then QuickTime Player → File → New Movie Recording → pick the iPad as the camera), trim to one clean run, and export three files per mode. Replace `classic` with `ar-party` or `loop`.
+
+```bash
+mkdir -p public/media/photobooth/modes
+
+# MP4 (H.264): 720 px wide, 30 fps, no audio, capped at ~2.2 Mbps
+ffmpeg -ss 0 -t 6 -i classic.mov -an \
+  -vf "fps=30,scale=720:-2:flags=lanczos,format=yuv420p" \
+  -c:v libx264 -profile:v high -preset slow -crf 26 -maxrate 2200k -bufsize 4400k \
+  -movflags +faststart public/media/photobooth/modes/classic.mp4
+
+# WebM (VP9): same size, capped at 2 Mbps
+ffmpeg -ss 0 -t 6 -i classic.mov -an \
+  -vf "fps=30,scale=720:-2:flags=lanczos" \
+  -c:v libvpx-vp9 -crf 34 -b:v 2000k -row-mt 1 -deadline good -cpu-used 2 \
+  public/media/photobooth/modes/classic.webm
+
+# Poster: first second, same size
+ffmpeg -ss 1 -i classic.mov -frames:v 1 -vf "scale=720:-2:flags=lanczos" \
+  -c:v libwebp -quality 80 public/media/photobooth/modes/classic.webp
+
+# Check sizes (each video must be under 2 MB) and the height for the config
+ls -lh public/media/photobooth/modes/
+ffprobe -v error -select_streams v:0 -show_entries stream=width,height -of csv=p=0 public/media/photobooth/modes/classic.mp4
+```
+
+`-t 6` (6 seconds) keeps both files under 2 MB at these caps. For a longer clip, lower the caps to about `14000 / seconds` kbps (10 s → `1400k`). Set `width`/`height` in `modeCards[].media` to what `ffprobe` prints.

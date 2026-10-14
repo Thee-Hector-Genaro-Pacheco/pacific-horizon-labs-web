@@ -766,6 +766,26 @@
   background: var(--pb-primary);
 }
 
+/* Modes: screen recordings keep their own aspect ratio from width/height */
+.pb-mode-video,
+.pb-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--pb-radius-sm);
+  background: var(--pb-surface-2);
+}
+.pb-mode {
+  padding: var(--pb-space-3);
+}
+.pb-mode h3,
+.pb-mode p {
+  padding-inline: var(--pb-space-2);
+}
+.pb-mode p {
+  padding-bottom: var(--pb-space-2);
+}
+
 .pb-faq {
   display: grid;
   gap: var(--pb-space-6);

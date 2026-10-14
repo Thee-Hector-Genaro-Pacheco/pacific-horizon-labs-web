@@ -188,6 +188,59 @@ export const boothSequence = {
 } as const;
 
 /* ------------------------------------------------------------------------ */
+/* Modes                                                                     */
+/* ------------------------------------------------------------------------ */
+
+/**
+ * A short screen recording of the mode in the real app. Prepare it with the
+ * ffmpeg commands in the README (720 px wide, under 2 MB each).
+ */
+export type ModeMedia = {
+  webm: string;
+  mp4: string;
+  poster: string;
+  width: number;
+  height: number;
+  /** Describes what the recording shows, for screen readers. */
+  alt: string;
+};
+
+export type ModeCard = {
+  id: "classic" | "ar-party" | "loop";
+  name: string;
+  description: string;
+  /** Cards without media are hidden. */
+  media?: ModeMedia;
+};
+
+/*
+ * Example once recordings exist:
+ *   media: {
+ *     webm: "/media/photobooth/modes/classic.webm",
+ *     mp4: "/media/photobooth/modes/classic.mp4",
+ *     poster: "/media/photobooth/modes/classic.webp",
+ *     width: 720, height: 540,
+ *     alt: "Screen recording of a Classic session: countdown, capture, and the photo review screen",
+ *   },
+ */
+export const modeCards: readonly ModeCard[] = [
+  { id: "classic", name: "Classic", description: "A clean photo." },
+  { id: "ar-party", name: "AR Party", description: "A photo with live face effects." },
+  { id: "loop", name: "Loop", description: "A short clip that plays forward, then back." },
+];
+
+export type EventFrameImage = {
+  src: string;
+  /** Describe the frame and what it says, e.g. "Gold border reading Celebrating the Big 50! around a group photo". */
+  alt: string;
+  width: number;
+  height: number;
+};
+
+/** Up to 3 photos showing real event frame overlays from the app. Empty hides the row. */
+export const eventFrames: readonly EventFrameImage[] = [];
+
+/* ------------------------------------------------------------------------ */
 /* Gallery                                                                   */
 /* ------------------------------------------------------------------------ */
 
@@ -255,6 +308,12 @@ export const gallerySets: readonly GallerySet[] = [
 export const photoboothFeatures = {
   /** "Tonight's theme" picker. Off until real AI background output exists. */
   themePicker: false,
+  /**
+   * "Modes" section after the scroll sequence. Off until real screen
+   * recordings exist; even when on, it renders nothing unless at least one
+   * mode card has media.
+   */
+  modes: false,
 };
 
 export type ThemeOption = {
