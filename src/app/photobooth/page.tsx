@@ -1,39 +1,64 @@
-import { CtaBand } from "@/components/ui";
-import { PhotoboothHero } from "@/components/photobooth/photobooth-hero";
-import { PhotoboothStory } from "@/components/photobooth/photobooth-story";
-import { EventExperienceGallery } from "@/components/photobooth/event-experience-gallery";
-import { PhotoboothEngineering } from "@/components/photobooth/photobooth-engineering";
+import { BoothSequence } from "@/components/photobooth/experience/booth-sequence";
+import { IrisGallery } from "@/components/photobooth/experience/iris";
+import {
+  BookingCta,
+  Faq,
+  Packages,
+  PbHero,
+  ThemePicker,
+} from "@/components/photobooth/experience/sections";
+import { localBusiness, photoboothFeatures } from "@/config/photobooth-experience";
+import { site } from "@/config/site";
 import { pageMetadata } from "@/lib/metadata";
+import "./photobooth.css";
+
+const description =
+  "AI photo booth rental in Orange County for weddings, parties, and corporate events. Live face effects, photo and Loop capture, and QR delivery to guests' phones.";
 
 export const metadata = pageMetadata({
-  title: "AI Photo Booth",
-  description:
-    "The Pacific Horizon AI Photo Booth is a native iPadOS application with real-time AR effects, multi-face tracking, photo and video capture, event branding, and QR-based delivery.",
+  title: "AI Photo Booth Rental in Orange County",
+  description,
   path: "/photobooth",
 });
 
+/** LocalBusiness JSON-LD. Unset (null) fields in the config are left out. */
+function businessJsonLd() {
+  const { address, geo, ...rest } = localBusiness;
+  const hasAddress = address.streetAddress || address.addressLocality;
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "@id": `${site.url}/photobooth#business`,
+    name: rest.name,
+    description,
+    url: `${site.url}/photobooth`,
+    email: site.contact.email,
+    telephone: rest.telephone,
+    priceRange: rest.priceRange,
+    image: rest.image,
+    openingHours: rest.openingHours,
+    areaServed: rest.areaServed,
+    parentOrganization: { "@type": "Organization", name: site.legalName, url: site.url },
+    sameAs: site.social.instagram ? [site.social.instagram] : undefined,
+    address: hasAddress ? { "@type": "PostalAddress", ...address } : undefined,
+    geo: geo ? { "@type": "GeoCoordinates", ...geo } : undefined,
+  };
+  return JSON.stringify(data, (_, v) => (v === null ? undefined : v)).replace(/</g, "\\u003c");
+}
+
 export default function PhotoBoothPage() {
   return (
-    <>
-      {/* SECTION 1: Cinematic Hero */}
-      <PhotoboothHero />
-
-      {/* SECTION 2: Immersive Scroll-Driven Storytelling ("From moment to memory") */}
-      <PhotoboothStory />
-
-      {/* SECTION 3: Event Experience Gallery */}
-      <EventExperienceGallery />
-
-      {/* SECTION 4: Engineering Architecture & Hardware Credibility */}
-      <PhotoboothEngineering />
-
-      {/* SECTION 5: Booking Resolution */}
-      <CtaBand
-        title="Planning an event?"
-        body="Pick a date, see which time windows are open, and tell us about the venue and the experience you have in mind."
-        primary={{ href: "/book", label: "Check dates and request" }}
-        secondary={{ href: "/contact", label: "Ask a question" }}
-      />
-    </>
+    <div className="pb-page">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: businessJsonLd() }} />
+      <PbHero />
+      <BoothSequence />
+      <section aria-labelledby="gallery-title">
+        <IrisGallery />
+      </section>
+      {photoboothFeatures.themePicker && <ThemePicker />}
+      <Packages />
+      <Faq />
+      <BookingCta />
+    </div>
   );
 }
