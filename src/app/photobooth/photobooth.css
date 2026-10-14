@@ -646,18 +646,10 @@
   }
 }
 
-/*
- * Section-body iris (desktop only). --pb-iris-r runs 0 → 1 with scroll:
- * the radius goes 45% → 72% of the box, which covers its corners.
- */
+/* Section-to-section iris. --pb-iris-r is driven by scroll; 1 = fully open. */
 .pb-iris {
   --pb-iris-r: 1;
-  clip-path: circle(calc(45% + var(--pb-iris-r) * 27%) at 50% 50%);
-}
-@media (max-width: 767px) {
-  .pb-iris {
-    clip-path: none;
-  }
+  clip-path: circle(calc(var(--pb-iris-r) * 160vmax) at 50% 30svh);
 }
 
 /* ------------------------------------------------------------------------ */

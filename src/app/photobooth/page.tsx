@@ -1,5 +1,5 @@
 import { BoothSequence } from "@/components/photobooth/experience/booth-sequence";
-import { IrisGallery } from "@/components/photobooth/experience/iris";
+import { IrisGallery, IrisReveal } from "@/components/photobooth/experience/iris";
 import {
   BookingCta,
   Faq,
@@ -52,9 +52,11 @@ export default function PhotoBoothPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: businessJsonLd() }} />
       <PbHero />
       <BoothSequence />
-      <section aria-labelledby="gallery-title">
-        <IrisGallery />
-      </section>
+      <IrisReveal>
+        <section aria-labelledby="gallery-title">
+          <IrisGallery />
+        </section>
+      </IrisReveal>
       {photoboothFeatures.themePicker && <ThemePicker />}
       <Packages />
       <Faq />

@@ -7,15 +7,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { gallerySets } from "@/config/photobooth-experience";
 
 const MOTION = "(prefers-reduced-motion: no-preference)";
-const IRIS = "(prefers-reduced-motion: no-preference) and (min-width: 768px)";
-const FADE = "(prefers-reduced-motion: reduce), (max-width: 767px)";
 
 /**
- * Reveals a section's body (never its heading) as it scrolls into view.
- * Desktop: a circular aperture that starts at 45% radius and is fully open
- * by the time the body's top reaches 60% of the viewport; the clip is then
- * removed so it never crops content. Phones and reduced motion: a short
- * fade-up instead. Without JS the content is simply visible.
+ * Opens a section through a circular aperture as it scrolls into view.
+ * The clip is removed once open so it never crops tall content.
  */
 export function IrisReveal({ children, className = "" }: { children: ReactNode; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -25,17 +20,17 @@ export function IrisReveal({ children, className = "" }: { children: ReactNode; 
     if (!el) return;
     gsap.registerPlugin(ScrollTrigger);
     const mm = gsap.matchMedia();
-    mm.add(IRIS, () => {
+    mm.add(MOTION, () => {
       gsap.fromTo(
         el,
-        { "--pb-iris-r": 0 },
+        { "--pb-iris-r": 0.04 },
         {
           "--pb-iris-r": 1,
-          ease: "power1.out",
+          ease: "power1.in",
           scrollTrigger: {
             trigger: el,
             start: "top bottom",
-            end: "top 60%",
+            end: "top 20%",
             scrub: true,
             onLeave: () => (el.style.clipPath = "none"),
             onEnterBack: () => (el.style.clipPath = ""),
@@ -43,15 +38,6 @@ export function IrisReveal({ children, className = "" }: { children: ReactNode; 
         },
       );
       return () => (el.style.clipPath = "");
-    });
-    mm.add(FADE, () => {
-      gsap.from(el, {
-        opacity: 0,
-        y: 16,
-        duration: 0.5,
-        ease: "power2.out",
-        scrollTrigger: { trigger: el, start: "top 90%", once: true },
-      });
     });
     return () => mm.revert();
   }, []);
@@ -97,7 +83,7 @@ export function IrisGallery() {
               <span className="pb-placeholder-tag">Illustrative images until real event photos are added</span>
             )}
           </div>
-          <IrisReveal className="pb-gallery-stack">
+          <div className="pb-gallery-stack">
             {gallerySets.map((set, si) => (
               <div key={set.id} data-set className="pb-gallery-set">
                 <h3 className="pb-eyebrow">
@@ -126,7 +112,7 @@ export function IrisGallery() {
                 </ul>
               </div>
             ))}
-          </IrisReveal>
+          </div>
         </div>
       </div>
     </div>

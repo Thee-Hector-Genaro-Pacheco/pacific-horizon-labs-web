@@ -3,7 +3,7 @@ import type { ComponentProps } from "react";
 import { Arrow, delay } from "@/components/ui";
 import { photoBooth } from "@/config/products";
 import { faqs, packages, themeOptions } from "@/config/photobooth-experience";
-import { IrisReveal } from "./iris";
+import { FadeReveal } from "./fade-reveal";
 import { ThemeArt } from "./placeholder-art";
 
 function PbButton({
@@ -81,7 +81,7 @@ export function ThemePicker() {
           )}
         </div>
 
-        <IrisReveal className="mt-10">
+        <FadeReveal className="mt-10">
           <fieldset className="pb-themes">
             <legend className="sr-only">Pick a background theme (preview only)</legend>
             {themeOptions.map((t, i) => (
@@ -115,7 +115,7 @@ export function ThemePicker() {
               </label>
             ))}
           </fieldset>
-        </IrisReveal>
+        </FadeReveal>
       </div>
     </section>
   );
@@ -136,7 +136,7 @@ export function Packages() {
           </div>
           <span className="pb-placeholder-tag">Placeholder pricing</span>
         </div>
-        <IrisReveal className="mt-10">
+        <FadeReveal className="mt-10">
           <ul className="grid gap-4 md:grid-cols-3" role="list">
             {packages.map((p, i) => (
               <li key={i} className="pb-card">
@@ -151,7 +151,7 @@ export function Packages() {
               </li>
             ))}
           </ul>
-        </IrisReveal>
+        </FadeReveal>
       </div>
     </section>
   );
@@ -164,14 +164,16 @@ export function Faq() {
         <h2 id="faq-title" className="pb-h2">
           Photo booth rental questions
         </h2>
-        <div className="pb-faq mt-10">
-          {faqs.map((f) => (
-            <div key={f.q}>
-              <h3>{f.q}</h3>
-              <p>{f.a}</p>
-            </div>
-          ))}
-        </div>
+        <FadeReveal className="mt-10">
+          <div className="pb-faq">
+            {faqs.map((f) => (
+              <div key={f.q}>
+                <h3>{f.q}</h3>
+                <p>{f.a}</p>
+              </div>
+            ))}
+          </div>
+        </FadeReveal>
       </div>
     </section>
   );
@@ -184,15 +186,17 @@ export function BookingCta() {
         <h2 id="book-title" className="pb-h2 max-w-3xl">
           Book the booth for your event
         </h2>
-        <p className="lede mt-5 max-w-xl text-(--pb-text-dim)">
-          Pick a date, see which time windows are open, and tell us about the venue.
-        </p>
-        <div className="mt-10 flex flex-wrap gap-3">
-          <PbButton href="/book">Book an event</PbButton>
-          <PbButton href="/contact" variant="secondary">
-            Ask a question
-          </PbButton>
-        </div>
+        <FadeReveal>
+          <p className="lede mt-5 max-w-xl text-(--pb-text-dim)">
+            Pick a date, see which time windows are open, and tell us about the venue.
+          </p>
+          <div className="mt-10 flex flex-wrap gap-3">
+            <PbButton href="/book">Book an event</PbButton>
+            <PbButton href="/contact" variant="secondary">
+              Ask a question
+            </PbButton>
+          </div>
+        </FadeReveal>
       </div>
     </section>
   );
