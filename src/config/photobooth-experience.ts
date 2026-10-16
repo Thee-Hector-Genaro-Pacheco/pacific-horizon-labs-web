@@ -55,7 +55,33 @@ export type SequenceMedia =
       height: number;
     };
 
-export type BeatId = "idle" | "lock" | "countdown" | "capture" | "result";
+/* ------------------------------------------------------------------------ */
+/* Prints                                                                    */
+/* ------------------------------------------------------------------------ */
+
+/**
+ * /book preselects "Digital + prints" from this query value. Must match an
+ * id in experienceTypes (src/config/booking.ts).
+ */
+export const printBookingHref = "/book?experience=digital_print";
+
+/**
+ * Prints shown in the Physical keepsake beat and the Digital + print
+ * section. Illustrative: these are the site's sample event images laid out
+ * as prints, not photos of real prints. Top of the stack first.
+ */
+export const printStack = {
+  illustrative: true,
+  /** Placeholder for the event name printed under each photo. */
+  eventLabel: "Your event name",
+  prints: [
+    { src: "/media/photobooth/synthetic-guests-master-800.webp", alt: "", width: 800, height: 600 },
+    { src: "/media/photobooth/wedding_event.webp", alt: "", width: 1440, height: 811 },
+    { src: "/media/photobooth/corporate_event.webp", alt: "", width: 1440, height: 811 },
+  ],
+} as const;
+
+export type BeatId = "idle" | "lock" | "countdown" | "capture" | "result" | "print";
 
 export type Beat = {
   id: BeatId;
@@ -70,6 +96,8 @@ export type Beat = {
    */
   still?: string;
   stillAlt: string;
+  /** Optional link under the beat copy. */
+  cta?: { label: string; href: string };
 };
 
 export const boothSequence = {
@@ -110,7 +138,7 @@ export const boothSequence = {
 
   /**
    * Draw the booth UI (welcome screen, face brackets, countdown, flash,
-   * shutter, strip, QR) on top of the media. Keep `true` for raw camera
+   * shutter, QR) on top of the media. Keep `true` for raw camera
    * footage. Set `false` if your footage is a screen recording of the app,
    * which already contains its own UI.
    */
@@ -138,7 +166,7 @@ export const boothSequence = {
   ],
 
   /** Height of the scroll track that drives the sequence, in svh. */
-  scrollLength: { desktop: 520, mobile: 400 },
+  scrollLength: { desktop: 620, mobile: 480 },
 
   /** Pixel width below which the mobile frame set and layout are used. */
   mobileBreakpoint: 768,
@@ -146,7 +174,7 @@ export const boothSequence = {
   beats: [
     {
       id: "idle",
-      range: [0, 0.16],
+      range: [0, 0.13],
       label: "Welcome",
       heading: "A ready screen between guests",
       body: "The booth waits on a welcome screen until someone taps Continue. Then guests pick Classic, AR Party, or Loop.",
@@ -154,7 +182,7 @@ export const boothSequence = {
     },
     {
       id: "lock",
-      range: [0.16, 0.36],
+      range: [0.13, 0.3],
       label: "Faces",
       heading: "It tracks up to four faces",
       body: "Face tracking follows up to four guests at once, so live effects stay on each face as people move.",
@@ -162,7 +190,7 @@ export const boothSequence = {
     },
     {
       id: "countdown",
-      range: [0.36, 0.58],
+      range: [0.3, 0.48],
       label: "Countdown",
       heading: "Five seconds to get ready",
       body: "A five-second countdown gives the group time to settle in. Guests can switch it to ten seconds.",
@@ -170,7 +198,7 @@ export const boothSequence = {
     },
     {
       id: "capture",
-      range: [0.58, 0.72],
+      range: [0.48, 0.6],
       label: "Capture",
       heading: "Photo or Loop",
       body: "Classic and AR Party take a photo. Loop records a short clip that plays forward, then back. Some AR effects record a Loop instead of a photo.",
@@ -178,11 +206,20 @@ export const boothSequence = {
     },
     {
       id: "result",
-      range: [0.72, 1],
+      range: [0.6, 0.8],
       label: "Delivery",
       heading: "Scan to download",
       body: "A QR code appears on screen. Guests scan it with their own phone to download their photo or Loop. No email forms, no shared keyboard.",
       stillAlt: "The captured photo next to a QR code labelled Scan to download",
+    },
+    {
+      id: "print",
+      range: [0.8, 1],
+      label: "Physical keepsake",
+      heading: "Digital when you want it. Printed when you want something to keep.",
+      body: "Optional physical keepsakes for eligible events. Print availability is confirmed with your event package.",
+      stillAlt: "A small stack of printed event photos with white borders, the top print showing three guests at a gala",
+      cta: { label: "Request Print Availability", href: printBookingHref },
     },
   ] as readonly Beat[],
 } as const;
@@ -429,6 +466,10 @@ export const faqs = [
   {
     q: "How much space and power does the booth need?",
     a: "[Fill in: floor footprint, outlet requirements, and whether Wi-Fi is needed.]",
+  },
+  {
+    q: "Do you offer prints?",
+    a: "Yes, as an optional add-on for eligible events. Print availability is confirmed with your event package, so mention it when you request a date.",
   },
   {
     q: "Can guests use AI backgrounds?",

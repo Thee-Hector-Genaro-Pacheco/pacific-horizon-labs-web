@@ -9,6 +9,8 @@ import {
   bookingFormName,
   eventSettings,
   eventTypes,
+  experienceFromQuery,
+  experienceTypes,
   quoteLabel,
 } from "@/config/booking";
 import { contactEmailHref, site } from "@/config/site";
@@ -59,6 +61,8 @@ const dateMessages = {
 // "Today" depends on the visitor's clock, so it is read only in the browser.
 // The server snapshot is null, which keeps the static HTML hydration-safe.
 const noSubscribe = () => () => {};
+// Same for ?experience=… (e.g. from the print CTA on /photobooth).
+const experienceFromUrl = () => experienceFromQuery(window.location.search);
 
 const field =
   "mt-2 block w-full rounded-xl border border-line-strong bg-ink px-4 py-3 text-[0.9375rem] text-paper placeholder:text-mute/70 transition-colors hover:border-paper/30 focus:border-signal focus:outline-none focus-visible:outline-2 focus-visible:outline-offset-2 aria-[invalid=true]:border-signal/70";
@@ -73,6 +77,10 @@ export function BookingFlow() {
   const range = today ? bookableRange(today) : null;
 
   const [eventType, setEventType] = useState("");
+  // Until the visitor picks one, the ?experience= preselection (if any) applies.
+  const urlExperience = useSyncExternalStore(noSubscribe, experienceFromUrl, () => null);
+  const [experienceChoice, setExperienceChoice] = useState<string | null>(null);
+  const experience = experienceChoice ?? urlExperience ?? "";
   const [date, setDate] = useState("");
   const [availability, setAvailability] = useState<Availability>({ state: "idle" });
   const [slot, setSlot] = useState<Slot | null>(null);
@@ -133,6 +141,7 @@ export function BookingFlow() {
   const slots = availability.state === "live" || availability.state === "offline" ? availability.slots : [];
   const openCount = slots.filter((s) => s.available).length;
   const selectedType = eventTypes.find((t) => t.id === eventType);
+  const selectedExperience = experienceTypes.find((t) => t.id === experience);
 
   function validate(form: HTMLFormElement): FieldErrors {
     const value = (name: string) => String(new FormData(form).get(name) ?? "").trim();
@@ -185,6 +194,7 @@ export function BookingFlow() {
       "form-name",
       "bot-field",
       "event_type",
+      "experience_type",
       "event_date",
       "preferred_time",
       "availability_status",
@@ -266,6 +276,31 @@ export function BookingFlow() {
             </div>
           </fieldset>
           <FieldError id={fid("event_type-error")}>{errors.event_type}</FieldError>
+
+          <fieldset className="mt-10">
+            <legend className={labelStyle}>
+              What experience are you interested in? <span className="font-normal text-mute">(optional)</span>
+            </legend>
+            <div className="mt-3 grid gap-2 sm:grid-cols-3">
+              {experienceTypes.map((t) => (
+                <label key={t.id} className={choiceCard}>
+                  <input
+                    type="radio"
+                    name="experience_type"
+                    value={t.id}
+                    checked={experience === t.id}
+                    onChange={() => setExperienceChoice(t.id)}
+                    className="sr-only"
+                  />
+                  <span className="text-[0.9375rem] font-medium text-paper">{t.label}</span>
+                  <span className="mt-1 text-xs leading-5 text-mute">{t.description}</span>
+                </label>
+              ))}
+            </div>
+            <p className="mt-3 text-xs leading-5 text-mute">
+              Print availability is confirmed with your event package.
+            </p>
+          </fieldset>
         </Step>
 
         <Step index="02" id={fid("step-date")} title="When is it?">
@@ -403,6 +438,7 @@ export function BookingFlow() {
           <p className="eyebrow">Your request</p>
           <dl className="mt-6 divide-y divide-line border-y border-line text-sm">
             <Summary term="Event">{selectedType?.label}</Summary>
+            <Summary term="Experience">{selectedExperience?.label}</Summary>
             <Summary term="Date">{date && availability.state !== "invalid" ? formatDate(date) : undefined}</Summary>
             <Summary term="Time">{preferredTime || undefined}</Summary>
             <Summary term="Price">{selectedType ? quoteLabel : undefined}</Summary>

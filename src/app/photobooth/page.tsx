@@ -3,6 +3,7 @@ import { IrisGallery, IrisReveal } from "@/components/photobooth/experience/iris
 import { Modes } from "@/components/photobooth/experience/modes";
 import {
   BookingCta,
+  DigitalPrint,
   Faq,
   Packages,
   PbHero,
@@ -53,6 +54,7 @@ export default function PhotoBoothPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: businessJsonLd() }} />
       <PbHero />
       <BoothSequence />
+      <DigitalPrint />
       {photoboothFeatures.modes && <Modes />}
       <IrisReveal>
         <section aria-labelledby="gallery-title">

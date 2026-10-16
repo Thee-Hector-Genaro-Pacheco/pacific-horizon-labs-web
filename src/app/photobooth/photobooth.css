@@ -486,6 +486,7 @@
   width: 100%;
 }
 .pb-seq-device {
+  position: relative;
   width: min(100%, calc((100svh - var(--pb-header-h) - 14rem) * 4 / 3 + 2 * var(--pb-bezel)));
   margin-inline: auto;
 }
@@ -502,6 +503,10 @@
 }
 .pb-beat[data-active] {
   opacity: 1;
+}
+/* Hidden beats share one grid cell; keep their links from catching taps. */
+.pb-beat:not([data-active]) {
+  pointer-events: none;
 }
 .pb-beat h3 {
   font-size: clamp(1.375rem, 2.2vw, 2rem);
@@ -784,6 +789,198 @@
 }
 .pb-mode p {
   padding-bottom: var(--pb-space-2);
+}
+
+/* ------------------------------------------------------------------------ */
+/* Prints (Physical keepsake beat, Digital + print section)                 */
+/* ------------------------------------------------------------------------ */
+
+/*
+ * A fanned stack of 4×6 prints. --i is 0 for the top print. The fan uses the
+ * individual translate/rotate properties so the scroll timeline can tween
+ * `transform` (y, opacity) without disturbing it.
+ */
+.pb-prints {
+  --pb-sheen: 0.3;
+  position: relative;
+  aspect-ratio: 2 / 3;
+  container-type: inline-size;
+  transform: perspective(1600px) rotateX(6deg);
+  transform-style: preserve-3d;
+}
+.pb-print-card {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 6cqw 6cqw 0;
+  border-radius: 1.2cqw;
+  background: var(--pb-print);
+  color: var(--pb-print-ink);
+  translate: calc(var(--i) * -16cqw) calc(var(--i) * 4cqw);
+  rotate: calc(4deg - var(--i) * 6deg);
+  box-shadow:
+    0 0.3cqw 0.6cqw rgb(0 0 0 / 0.3),
+    0 6cqw 14cqw -4cqw rgb(0 0 0 / 0.75);
+}
+.pb-print-photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--pb-surface-2);
+}
+.pb-print-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Gloss on the top print only. */
+.pb-print-sheen {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(105deg, transparent 35%, rgb(255 255 255 / 0.32) 50%, transparent 65%);
+  translate: calc(var(--pb-sheen) * 200% - 100%) 0;
+  mix-blend-mode: screen;
+}
+.pb-print-card:not(:last-of-type) .pb-print-sheen {
+  display: none;
+}
+.pb-print-footer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-mono);
+  font-size: max(4.6cqw, 6px);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--pb-print-ink) 72%, transparent);
+}
+.pb-print-mark {
+  width: 7cqw;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: max(0.6cqw, 1px) solid currentColor;
+  box-shadow: inset 0 0 0 1.6cqw var(--pb-print), inset 0 0 0 10cqw currentColor;
+}
+/* Same role as .pb-placeholder-tag, sized to the print. */
+.pb-print-tag {
+  position: absolute;
+  left: 3cqw;
+  bottom: 3cqw;
+  border: 1px dashed rgb(255 255 255 / 0.4);
+  border-radius: 999px;
+  padding: 0.6cqw 2.4cqw;
+  font-family: var(--font-mono);
+  font-size: max(3.6cqw, 6px);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgb(255 255 255 / 0.85);
+  background: var(--pb-scrim);
+}
+
+/* In the sequence: in front of the iPad's lower right, hidden until beat 6. */
+.pb-prints-live {
+  position: absolute;
+  right: 6%;
+  bottom: -4%;
+  width: 30%;
+  visibility: hidden;
+}
+.pb-prints-live .pb-print-card {
+  opacity: 0;
+}
+/* Reduced-motion still for beat 6. */
+.pb-prints-still {
+  width: 46%;
+  margin: 1.5rem auto 3.5rem 30%;
+}
+
+/* Digital + print offers */
+.pb-offer {
+  padding: var(--pb-space-4);
+}
+.pb-offer > :not(.pb-offer-visual) {
+  margin-inline: var(--pb-space-2);
+}
+.pb-offer > :last-child {
+  margin-bottom: var(--pb-space-2);
+}
+.pb-offer-visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  border-radius: var(--pb-radius);
+  container-type: inline-size;
+}
+/* Digital: glass and light. */
+.pb-offer-digital {
+  gap: 7cqw;
+  background:
+    radial-gradient(circle at 42% 55%, var(--pb-primary-soft), transparent 60%),
+    var(--pb-surface-2);
+}
+.pb-phone {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 26cqw;
+  aspect-ratio: 9 / 19;
+  overflow: hidden;
+  border-radius: 4.5cqw;
+  border: 1cqw solid var(--pb-device-edge);
+  background: #000;
+  box-shadow: 0 0 0 1px var(--pb-line), 0 3cqw 8cqw -2cqw rgb(0 0 0 / 0.8), 0 0 10cqw -2cqw var(--pb-primary-soft);
+}
+.pb-phone img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+}
+.pb-phone-toast {
+  position: absolute;
+  left: 50%;
+  top: 9%;
+  translate: -50% 0;
+  white-space: nowrap;
+  border-radius: 999px;
+  padding: 0.8cqw 2.2cqw;
+  font-size: max(2.3cqw, 7px);
+  background: rgb(255 255 255 / 0.16);
+  color: var(--pb-text);
+  backdrop-filter: blur(6px);
+}
+.pb-offer-qr {
+  width: 17cqw;
+  padding: 1.6cqw;
+  border-radius: 1.4cqw;
+  background: var(--pb-print);
+  color: var(--pb-print-ink);
+  box-shadow: 0 0 0 1px var(--pb-primary), 0 0 var(--pb-glow) var(--pb-primary-soft);
+}
+/* Print: paper under warm light. */
+.pb-offer-print {
+  background:
+    radial-gradient(ellipse at 55% 45%, rgb(242 220 190 / 0.14), transparent 65%),
+    var(--pb-surface-2);
+}
+.pb-prints-offer {
+  width: 30cqw;
+  translate: 7cqw 2cqw;
+}
+.pb-link {
+  min-height: 2.75rem;
+  align-items: center;
+  gap: var(--pb-space-2);
+  font-weight: 500;
+  color: var(--pb-primary);
+  text-underline-offset: 0.25em;
+}
+.pb-link:hover {
+  text-decoration: underline;
 }
 
 .pb-faq {

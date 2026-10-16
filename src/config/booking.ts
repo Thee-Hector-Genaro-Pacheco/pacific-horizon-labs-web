@@ -53,6 +53,25 @@ export const eventTypes = [
   { id: "other", label: "Other", description: "Something else. Tell us about it in the notes." },
 ] as const;
 
+/**
+ * "What experience are you interested in?" Optional. The id is what's
+ * submitted as experience_type, so leads can be counted by value later
+ * (an empty value means the question was skipped). Keep ids stable.
+ */
+export const experienceTypes = [
+  { id: "digital", label: "Digital experience", description: "QR delivery to guests' phones." },
+  { id: "digital_print", label: "Digital + prints", description: "Digital delivery plus printed keepsakes, if available for your event." },
+  { id: "unsure", label: "Not sure yet", description: "We can talk through options together." },
+] as const;
+
+export type ExperienceTypeId = (typeof experienceTypes)[number]["id"];
+
+/** Reads ?experience=<id> from a query string; anything unknown is ignored. */
+export function experienceFromQuery(search: string): ExperienceTypeId | null {
+  const value = new URLSearchParams(search).get("experience");
+  return experienceTypes.find((t) => t.id === value)?.id ?? null;
+}
+
 export const eventSettings = [
   { value: "Indoor", label: "Indoor" },
   { value: "Outdoor", label: "Outdoor" },

@@ -2,9 +2,10 @@ import Link from "next/link";
 import type { ComponentProps } from "react";
 import { Arrow, delay } from "@/components/ui";
 import { photoBooth } from "@/config/products";
-import { faqs, packages, themeOptions } from "@/config/photobooth-experience";
+import { boothSequence, faqs, packages, printBookingHref, themeOptions } from "@/config/photobooth-experience";
 import { FadeReveal } from "./fade-reveal";
-import { ThemeArt } from "./placeholder-art";
+import { PlaceholderQr, ThemeArt } from "./placeholder-art";
+import { PrintStack } from "./print-stack";
 
 function PbButton({
   variant = "primary",
@@ -115,6 +116,77 @@ export function ThemePicker() {
               </label>
             ))}
           </fieldset>
+        </FadeReveal>
+      </div>
+    </section>
+  );
+}
+
+/**
+ * Digital delivery vs. the optional print add-on. Two offers, not a price
+ * table: the phone visual is glass and light, the print visual is paper.
+ */
+export function DigitalPrint() {
+  return (
+    <section aria-labelledby="digital-print-title" className="pb-section">
+      <div className="container-site">
+        <div className="max-w-2xl">
+          <h2 id="digital-print-title" className="pb-h2">
+            Digital + print experiences
+          </h2>
+          <p className="lede mt-5 text-(--pb-text-dim)">
+            Every photo goes to guests&apos; phones. For events that want something to take home, prints are an
+            optional add-on.
+          </p>
+        </div>
+
+        <FadeReveal className="mt-10">
+          <ul className="grid gap-4 md:grid-cols-2" role="list">
+            <li className="pb-card pb-offer">
+              <div className="pb-offer-visual pb-offer-digital" role="img" aria-label="A phone showing a guest's photo saved from the booth, next to the booth's QR code">
+                <div className="pb-phone">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={boothSequence.resultPhoto ?? "/media/photobooth/synthetic-guests-master-800.webp"} alt="" width={800} height={600} loading="lazy" decoding="async" />
+                  <span className="pb-phone-toast">Saved to Photos</span>
+                </div>
+                <div className="pb-offer-qr">
+                  <PlaceholderQr />
+                </div>
+              </div>
+              <p className="pb-eyebrow mt-6">
+                <span className="pb-accent">Included</span>
+              </p>
+              <h3 className="mt-2 text-xl font-medium">Digital delivery</h3>
+              <ul className="pb-list mt-4">
+                <li>QR-based guest delivery</li>
+                <li>Save directly to your device</li>
+                <li>Event-branded media</li>
+              </ul>
+            </li>
+
+            <li className="pb-card pb-offer">
+              <div className="pb-offer-visual pb-offer-print" role="img" aria-label="A small stack of printed event photos with white borders">
+                <PrintStack className="pb-prints-offer" />
+              </div>
+              <p className="pb-eyebrow mt-6">Optional add-on</p>
+              <h3 className="mt-2 text-xl font-medium">Print add-on</h3>
+              <ul className="pb-list mt-4">
+                <li>Physical event keepsakes</li>
+                <li>Event-branded print layouts</li>
+                <li>Available by event request</li>
+              </ul>
+              <p className="mt-5 text-sm leading-6 text-(--pb-text-mute)">
+                Print availability is confirmed with your event package.
+              </p>
+              <Link href={printBookingHref} className="pb-link mt-4 inline-flex">
+                Request print availability <Arrow />
+              </Link>
+            </li>
+          </ul>
+
+          <div className="mt-10">
+            <PbButton href="/book">Check Event Availability</PbButton>
+          </div>
         </FadeReveal>
       </div>
     </section>

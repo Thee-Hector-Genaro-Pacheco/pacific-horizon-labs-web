@@ -1,10 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, type CSSProperties } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { boothSequence, type BeatId } from "@/config/photobooth-experience";
 import { BoothScreen } from "./booth-screen";
+import { PrintStack } from "./print-stack";
 import { createFramesDriver, createVideoDriver, type MediaDriver } from "./sequence-media";
 
 const { beats, media, scrollLength, mobileBreakpoint } = boothSequence;
@@ -40,6 +42,10 @@ export function BoothSequence() {
         const all = (sel: string) => Array.from(screen.querySelectorAll<HTMLElement>(sel));
         const copy = Array.from(root.querySelectorAll<HTMLElement>("[data-beat-copy]"));
         const rail = Array.from(root.querySelectorAll<HTMLElement>("[data-rail] span"));
+        // Controls inside a step (e.g. the print CTA). Inactive steps are
+        // invisible but stay in the DOM, so their controls are made inert:
+        // not focusable, not clickable, hidden from assistive tech.
+        const controls = copy.map((el) => Array.from(el.querySelectorAll<HTMLElement>("a, button")));
 
         let driver: MediaDriver | null = null;
         if (media.kind === "frames") {
@@ -56,6 +62,7 @@ export function BoothSequence() {
           if (idx === active) return;
           active = idx;
           copy.forEach((el, i) => el.toggleAttribute("data-active", i === idx));
+          controls.forEach((els, i) => els.forEach((c) => c.toggleAttribute("inert", i !== idx)));
           rail.forEach((el, i) => el.toggleAttribute("data-on", i <= idx));
         };
 
@@ -136,6 +143,23 @@ export function BoothSequence() {
           tl.fromTo(qr, { opacity: 0, x: -40 }, { opacity: 1, x: 0, ease: "power2.out", duration: span("result", 0.2) }, at("result", 0.35));
         }
 
+        // 6. Physical keepsake: the iPad steps back, prints settle in front of
+        // it one at a time, then a sheen passes across the top print.
+        const ipad = root.querySelector<HTMLElement>("[data-live] .pb-ipad");
+        const prints = root.querySelector<HTMLElement>("[data-live] .pb-prints");
+        const cards = Array.from(root.querySelectorAll<HTMLElement>("[data-live] [data-print-card]")).reverse();
+        if (ipad && prints && cards.length) {
+          tl.to(ipad, { scale: 0.94, opacity: 0.45, ease: "power2.inOut", duration: span("print", 0.3) }, at("print", 0));
+          tl.set(prints, { visibility: "visible" }, at("print", 0));
+          tl.fromTo(
+            cards,
+            { opacity: 0, y: 60 },
+            { opacity: 1, y: 0, ease: "power3.out", stagger: span("print", 0.1), duration: span("print", 0.3) },
+            at("print", 0.08),
+          );
+          tl.fromTo(prints, { "--pb-sheen": 0 }, { "--pb-sheen": 1, ease: "power1.inOut", duration: span("print", 0.3) }, at("print", 0.6));
+        }
+
         setActive(0);
         driver?.seek(0);
 
@@ -147,7 +171,11 @@ export function BoothSequence() {
           scrub: mobile ? true : 0.4,
         });
 
-        return () => driver?.destroy();
+        return () => {
+          driver?.destroy();
+          // Back to the static layout (e.g. reduced motion turned on): every step is visible again.
+          controls.flat().forEach((c) => c.removeAttribute("inert"));
+        };
       },
     );
 
@@ -181,7 +209,11 @@ export function BoothSequence() {
                 {beats.map((b, i) => (
                   <li key={b.id} data-beat-copy className="pb-beat" {...(i === 0 ? { "data-active": "" } : {})}>
                     <div className="pb-beat-still">
-                      {b.still ? (
+                      {b.id === "print" ? (
+                        <div role="img" aria-label={b.stillAlt}>
+                          <PrintStack className="pb-prints-still" />
+                        </div>
+                      ) : b.still ? (
                         // eslint-disable-next-line @next/next/no-img-element
                         <img src={b.still} alt={b.stillAlt} width={1440} height={1080} loading="lazy" decoding="async" className="w-full rounded-xl" />
                       ) : (
@@ -195,6 +227,11 @@ export function BoothSequence() {
                     </span>
                     <h3 className="mt-2">{b.heading}</h3>
                     <p>{b.body}</p>
+                    {b.cta && (
+                      <Link href={b.cta.href} className="pb-btn pb-btn-secondary mt-6">
+                        {b.cta.label}
+                      </Link>
+                    )}
                   </li>
                 ))}
               </ol>
@@ -204,10 +241,11 @@ export function BoothSequence() {
               <div
                 className="pb-ipad"
                 role="img"
-                aria-label="An iPad photo booth screen showing three guests at a gala. As you scroll it steps through a session: ready screen, face tracking, a five-second countdown, capture, and a QR code to download the photo."
+                aria-label="An iPad photo booth screen showing three guests at a gala. As you scroll it steps through a session: ready screen, face tracking, a five-second countdown, capture, a QR code to download the photo, and finally a small stack of printed photos."
               >
                 <BoothScreen media={liveMedia()} />
               </div>
+              <PrintStack className="pb-prints-live" />
             </div>
           </div>
         </div>
