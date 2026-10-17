@@ -197,29 +197,32 @@ export function Packages() {
   return (
     <section aria-labelledby="packages-title" className="pb-section">
       <div className="container-site">
-        <div className="flex flex-wrap items-end justify-between gap-4">
-          <div className="max-w-2xl">
-            <h2 id="packages-title" className="pb-h2">
-              Packages and pricing
-            </h2>
-            <p className="lede mt-5 text-(--pb-text-dim)">
-              Every event gets a written quote.
-            </p>
-          </div>
-          <span className="pb-placeholder-tag">Placeholder pricing</span>
+        <div className="max-w-2xl">
+          <h2 id="packages-title" className="pb-h2">
+            Event packages
+          </h2>
+          <p className="lede mt-5 text-(--pb-text-dim)">
+            Every event is different. Choose the experience you&apos;re interested in and we&apos;ll prepare a
+            written quote.
+          </p>
         </div>
         <FadeReveal className="mt-10">
           <ul className="grid gap-4 md:grid-cols-3" role="list">
-            {packages.map((p, i) => (
-              <li key={i} className="pb-card">
-                <h3 className="text-lg font-medium">{p.name}</h3>
+            {packages.map((p) => (
+              <li key={p.name} className={`pb-card pb-package ${p.badge ? "pb-package-featured" : ""}`}>
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <h3 className="text-lg font-medium">{p.name}</h3>
+                  {p.badge && <span className="pb-package-badge">{p.badge}</span>}
+                </div>
                 <p className="mt-4 text-3xl font-medium tracking-tight">{p.price}</p>
-                <p className="pb-eyebrow mt-2">{p.duration}</p>
                 <ul className="pb-list mt-6">
                   {p.includes.map((item) => (
                     <li key={item}>{item}</li>
                   ))}
                 </ul>
+                <PbButton href={p.cta.href} variant="secondary" className="pb-package-cta">
+                  {p.cta.label}
+                </PbButton>
               </li>
             ))}
           </ul>

@@ -750,6 +750,36 @@
   background: var(--pb-surface);
   padding: var(--pb-space-6);
 }
+/* Packages: the CTA sits at the bottom so cards line up in a row. */
+.pb-package {
+  display: flex;
+  flex-direction: column;
+}
+.pb-package-cta {
+  margin-top: auto;
+  align-self: flex-start;
+}
+.pb-package .pb-list {
+  margin-bottom: var(--pb-space-6);
+}
+/* Print option: a quiet accent, not a "most popular" claim. */
+.pb-package-featured {
+  border-color: color-mix(in srgb, var(--pb-primary) 38%, transparent);
+  background:
+    radial-gradient(120% 60% at 50% 0%, var(--pb-primary-soft), transparent 70%),
+    var(--pb-surface);
+}
+.pb-package-badge {
+  border: 1px solid color-mix(in srgb, var(--pb-primary) 45%, transparent);
+  border-radius: 999px;
+  padding: 0.125rem var(--pb-space-2);
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--pb-primary);
+}
+
 .pb-list {
   list-style: none;
   padding: 0;

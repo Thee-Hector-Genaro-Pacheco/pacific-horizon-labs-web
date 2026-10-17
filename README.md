@@ -72,7 +72,7 @@ Flags in the same file:
 - `boothSequence.illustrative` (default `true`): shows the "Illustrative image" label on the iPad screen. Set it to `false` when the media is real event footage.
 - `gallerySets[].photos[].illustrative`: labels each gallery photo "Illustrative". Set it to `false` for real event photos; the gallery's heading label disappears once no photo is illustrative.
 
-The "Concept art" labels disappear once themes have real `src` values. The "Placeholder pricing" label is in `sections.tsx`; remove it when prices are real.
+The "Concept art" labels disappear once themes have real `src` values. Packages are quote-based (no prices or durations); each card's button preselects its `experience_type` on `/book`.
 
 **Why frames and not video:** iOS Safari seeks video unreliably while scrolling, even with every frame a keyframe, and often skips painting. A WebP sequence drawn to a canvas scrubs smoothly and lets mobile load a smaller, lower-frame-count set. Video is supported (`kind: "video"`) if you prefer one file.
 

@@ -405,38 +405,54 @@ export const themeOptions: readonly ThemeOption[] = [
 /* Packages                                                                  */
 /* ------------------------------------------------------------------------ */
 
-export const packages = [
+/**
+ * Quote-based packages. No prices or durations are published yet; each card
+ * leads to /book, preselecting the matching experience_type where one
+ * exists. `featured` adds a neutral badge and a subtle accent border.
+ */
+export const packages: readonly {
+  name: string;
+  price: string;
+  includes: readonly string[];
+  cta: { label: string; href: string };
+  badge?: string;
+}[] = [
   {
-    name: "[Package name]",
-    price: "$[min]–$[max]",
-    duration: "[X] hours",
-    includes: [
-      "On-site AI photo booth with attendant [confirm]",
-      "Photo capture with QR delivery to guests' phones",
-      "Event frame overlay on photos",
-    ],
-  },
-  {
-    name: "[Package name]",
-    price: "$[min]–$[max]",
-    duration: "[X] hours",
-    includes: [
-      "Everything in the first package",
-      "Photo and Loop capture",
-      "AR Party live face effects",
-    ],
-  },
-  {
-    name: "[Package name]",
+    name: "Digital Experience",
     price: "Custom quote",
-    duration: "[X]+ hours",
     includes: [
-      "Brand activations and multi-day events",
-      "Custom event branding on guest screens (coming soon)",
-      "[Fill in: data capture, sponsor placement, other options]",
+      "AI photo booth experience",
+      "Photo and Loop capture",
+      "QR delivery to guests' phones",
+      "Event-branded media",
+      "Live face effects and interactive modes",
     ],
+    cta: { label: "Request digital quote", href: "/book?experience=digital" },
   },
-] as const;
+  {
+    name: "Digital + Print",
+    price: "Custom quote",
+    badge: "Print option",
+    includes: [
+      "Everything in the Digital Experience",
+      "Optional physical event keepsakes",
+      "Event-branded print layouts",
+      "Print availability confirmed with your event package",
+    ],
+    cta: { label: "Request digital + print quote", href: printBookingHref },
+  },
+  {
+    name: "Custom / Brand Activation",
+    price: "Custom quote",
+    includes: [
+      "Sponsored and promotional activations",
+      "Custom guest-facing branding (coming soon)",
+      "Specialized event requirements",
+      "Multi-day and custom event scopes",
+    ],
+    cta: { label: "Discuss a custom event", href: "/book" },
+  },
+];
 
 /* ------------------------------------------------------------------------ */
 /* FAQ                                                                       */
